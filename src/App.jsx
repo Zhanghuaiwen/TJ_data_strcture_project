@@ -25,6 +25,8 @@ export default function App() {
   const flyKey = useRef(0);
   const scenarioRef = useRef(scenarioKey);
   scenarioRef.current = scenarioKey;
+  const speedRef = useRef(speed);
+  speedRef.current = speed;
 
   /* ---------------- 引擎生命周期 ---------------- */
   const bootstrap = useCallback(() => {
@@ -53,19 +55,23 @@ export default function App() {
   }, [scenarioKey]);
 
   /* ---------------- 弹幕上屏 ---------------- */
-  const pushFlying = useCallback((list) => {
+  // 飞行时长随播放速度调整：speed 越大时间轴推进越快，弹幕必须飞得越快才不脱节。
+  // 基准飞行时长按 1x 速度设计（约 4~6.5s 横跨画面），实际时长除以 speed。
+  const pushFlying = useCallback((list, speed) => {
     if (!list.length) return;
+    const sp = speed || 1;
     const items = [];
     const step = Math.max(1, Math.ceil(list.length / 26)); // 采样，避免 DOM 过多
     for (let i = 0; i < list.length; i += step) {
       const d = list[i];
       flyKey.current += 1;
+      const dur0 = 4 + Math.random() * 2.5; // 1x 速度下的基准飞行时长
       items.push({
         key: flyKey.current,
         text: d.text,
         color: d.color,
         lane: flyKey.current,
-        dur: 4 + Math.random() * 2.5,
+        dur: dur0 / sp,
         ts: d.ts,
         weight: d.weight,
         late: d.late,
@@ -86,7 +92,7 @@ export default function App() {
     const { batch, results } = emitter.step();
     const accepted = [];
     for (let i = 0; i < results.length; i++) if (results[i].ok) accepted.push(batch[i]);
-    pushFlying(accepted);
+    pushFlying(accepted, speedRef.current);
     refresh();
   }, [pushFlying, refresh]);
 
@@ -98,7 +104,7 @@ export default function App() {
       const { batch, results } = kind === 'late' ? emitter.injectLateBurst(700) : emitter.injectFlood(1300);
       const accepted = [];
       for (let i = 0; i < results.length; i++) if (results[i].ok) accepted.push(batch[i]);
-      pushFlying(accepted);
+      pushFlying(accepted, speedRef.current);
       refresh();
     },
     [pushFlying, refresh],
