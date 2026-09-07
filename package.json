@@ -1,0 +1,23 @@
+{
+  "name": "danmaku-timeline-cache",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "互联网视频直播高并发弹幕时间轴对齐缓存 —— 带水平索引的双向循环链表 vs 标准单链表（手工实现 + 可视化）",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "test": "node tests/core.test.mjs",
+    "bench": "node scripts/bench.mjs",
+    "smoke": "vite build --ssr src/ssr-smoke.jsx --outDir dist-ssr && node dist-ssr/ssr-smoke.js"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}

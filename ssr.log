@@ -1,0 +1,6 @@
+[36mvite v5.4.21 [32mbuilding SSR bundle for production...[36m[39m
+transforming...
+[32m✓[39m 18 modules transformed.
+rendering chunks...
+[2mdist-ssr/[22m[36mssr-smoke.js  [39m[1m[2m70.12 kB[22m[1m[22m
+[32m✓ built in 423ms[39m
